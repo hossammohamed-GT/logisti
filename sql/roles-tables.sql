@@ -60,7 +60,7 @@ VALUES
 CREATE TABLE IF NOT EXISTS `licenses` (
   `id`             BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `token`          VARCHAR(64)  NOT NULL,
-  `activity`       TEXT         NOT NULL,   -- عنوان النشاط أعلى الصفحة
+  `activity`       TEXT         NOT NULL,   -- نشاط الترخيص = العنوان الأخضر أعلى الصفحة
   -- معلومات الترخيص الرئيسي
   `license_kind`   VARCHAR(50)  NOT NULL,   -- رئيسي / فرعي
   `license_number` VARCHAR(50)  NOT NULL,

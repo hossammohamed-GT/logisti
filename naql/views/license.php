@@ -2,11 +2,6 @@
 /** الترخيص - License | $data من ملف البيانات الثابتة */
 $e = static fn($v) => htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8');
 ?>
-        <!-- نشاط الترخيص -->
-        <section class="section">
-          <h2 class="section-title"><?= $e($data['activity']) ?></h2>
-        </section>
-
         <!-- معلومات الترخيص الرئيسي -->
         <section class="section">
           <h2 class="section-title">معلومات الترخيص الرئيسي</h2>
@@ -81,7 +76,7 @@ $e = static fn($v) => htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8');
               <div class="label">المدينة</div>
               <div class="value"><?= $e($data['city']) ?></div>
             </div>
-            <div class="field span-2">
+            <div class="field">
               <div class="label">مقر مزاولة النشاط</div>
               <div class="value"><?= $e($data['address']) ?></div>
             </div>
