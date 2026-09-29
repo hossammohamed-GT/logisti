@@ -3,4 +3,11 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
+# الرابط الموحّد الجديد: /naql/validate-driver-card?token=XXXX
+RewriteRule ^naql/validate-driver-card$ naql/validate-driver-card.php [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# الرابط القديم (يحوّل تلقائيًا إلى الجديد)
 RewriteRule ^validate-driver-card$ validate-driver-card.php [L,QSA]
