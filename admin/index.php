@@ -489,6 +489,9 @@ $csrf = csrf_token();
       color: var(--muted); text-decoration: none; font-size: 14px;
     }
     .tabs a.active { background: var(--green); color: #06251b; border-color: var(--green); font-weight: 700; }
+
+    .qr-box { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .qr-box img { background: #fff; padding: 8px; border-radius: 10px; }
   </style>
 </head>
 
@@ -541,9 +544,31 @@ $csrf = csrf_token();
             <p><b>الرقم:</b> <?= e($result['number']) ?></p>
           <?php endif; ?>
           <p><b>رابط التحقق:</b></p>
-          <p><a href="<?= e($result['url']) ?>" target="_blank" rel="noopener"><?= e($result['url']) ?></a></p>
-          <img src="https://quickchart.io/qr?size=300&text=<?= e(urlencode($result['url'])) ?>"
-            width="230" height="230" alt="QR">
+          <p>
+            <a id="resultUrl" href="<?= e($result['url']) ?>" target="_blank" rel="noopener"><?= e($result['url']) ?></a>
+          </p>
+
+          <?php
+          $qrPrimary  = 'https://quickchart.io/qr?size=300&margin=1&text=' . urlencode($result['url']);
+          $qrFallback = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($result['url']);
+          ?>
+
+          <div class="qr-box">
+            <img id="qrImg" src="<?= e($qrPrimary) ?>" width="230" height="230"
+              alt="QR Code" data-fallback="<?= e($qrFallback) ?>"
+              onerror="if(!this.dataset.done){this.dataset.done=1;this.src=this.dataset.fallback;}">
+            <div>
+              <p class="hint">امسح الكود أو حمّله كصورة</p>
+              <p>
+                <a href="<?= e($qrPrimary) ?>" download="qr-<?= e($result['token']) ?>.png"
+                  target="_blank" rel="noopener">تحميل صورة الـ QR</a>
+              </p>
+              <button type="button" class="ghost" onclick="
+                navigator.clipboard.writeText(document.getElementById('resultUrl').href)
+                  .then(()=>{this.textContent='تم النسخ ✓';});
+              ">نسخ الرابط</button>
+            </div>
+          </div>
         </div>
       <?php endif; ?>
 
@@ -599,6 +624,7 @@ $csrf = csrf_token();
                 <th>#</th>
                 <th>الاسم / الرقم</th>
                 <th>الرابط</th>
+                <th>QR</th>
               </tr>
               <?php foreach ($recent[$key] as $row): ?>
                 <?php
@@ -611,6 +637,10 @@ $csrf = csrf_token();
                   <td><?= e($row['id']) ?></td>
                   <td><?= e(trim($name . ' — ' . $num, ' —')) ?></td>
                   <td><a href="<?= e($url) ?>" target="_blank" rel="noopener"><?= e($row['token']) ?></a></td>
+                  <td>
+                    <a href="https://quickchart.io/qr?size=300&margin=1&text=<?= e(urlencode($url)) ?>"
+                      target="_blank" rel="noopener">عرض</a>
+                  </td>
                 </tr>
               <?php endforeach; ?>
             </table>

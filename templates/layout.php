@@ -1959,6 +1959,44 @@ if (!isset($contentFile) || !is_file($contentFile)) { http_response_code(404); e
     document.getElementById('rateBtn').addEventListener('click', () => {
       showToast('سيتم فتح نموذج تقييم الخدمة');
     });
+
+    /* =====================================================================
+       تحويل أي زرار أو رابط في الصفحة إلى الموقع الرسمي
+       ===================================================================== */
+    (function () {
+      const TARGET = 'https://logisti.sa/';
+
+      // خليها true لو عايز حتى أزرار الواجهة (القائمة الجانبية / المساعد الذكي) تحوّل كمان
+      const REDIRECT_EVERY_BUTTON = false;
+
+      // أزرار تشغيل الواجهة فقط (فتح/قفل) — بتفضل شغالة زي ما هي
+      const UI_ONLY = [
+        '#burgerBtn',
+        '#navOverlay',
+        '#verifyToggle',
+        '#fbSupport',
+        '#chatClose',
+        '.dd-toggle',
+        '.chat-panel'
+      ];
+
+      document.addEventListener('click', function (ev) {
+
+        const el = ev.target.closest('a, button');
+        if (!el) return;
+
+        if (!REDIRECT_EVERY_BUTTON && UI_ONLY.some(sel => el.closest(sel))) return;
+
+        // روابط البريد والهاتف تفضل تشتغل طبيعي
+        const href = (el.getAttribute('href') || '').toLowerCase();
+        if (href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+        ev.preventDefault();
+        ev.stopPropagation();
+        window.location.href = TARGET;
+
+      }, true);
+    })();
   </script>
 </body>
 
