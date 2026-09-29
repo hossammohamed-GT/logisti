@@ -150,7 +150,7 @@ if (
     ]);
 
     $validation_url =
-        "https://logisti.gt.tc/validate-driver-card?token=" . $token;
+        "https://logisti.gt.tc/naql/validate-driver-card?token=" . $token;
 
     
     $qr_url =
