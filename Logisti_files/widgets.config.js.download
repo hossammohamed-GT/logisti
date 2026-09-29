@@ -1,0 +1,207 @@
+if (!window._genesys) window._genesys = {};
+if (!window._gt) window._gt = [];
+
+// Clear any persisted webchat session cookie/storage so Genesys never shows
+// the "previous chat — resume?" prompt at script load. Auto-restore is also
+// disabled below via async.enabled = false.
+(function clearGenesysSession() {
+  try {
+    var paths = ['/', window.location.pathname];
+    var domains = ['', '.' + window.location.hostname, window.location.hostname];
+    paths.forEach(function (p) {
+      domains.forEach(function (d) {
+        document.cookie = 'webchatSessionData=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=' + p + (d ? '; domain=' + d : '');
+      });
+    });
+    if (window.localStorage) localStorage.removeItem('_genesys.widgets.webchat.state');
+    if (window.sessionStorage) sessionStorage.removeItem('_genesys.widgets.webchat.state');
+  } catch (e) { /* noop */ }
+})();
+
+window._genesys.widgets = {
+  main: {
+    debug: false,
+    theme: "light",
+    lang: window.language ?? "ar", //document.getElementById("webchatLang").value,
+    i18n: window.languageFile ?? "assets/liveChat/i18n/ar/webchat/ar.json", //document.getElementById("webchatI18nFile").value,
+    customStylesheetID: "genesys_widgets_custom",
+    preload: [
+      "webchat", //disable to load it manually with WebChat.open command below
+    ],
+    cookieOptions: {
+      secure: true,
+      domain: "logisti.sa",
+      path: "/",
+    },
+  },
+  webchat: {
+    dataURL: "https://chat.elm.sa/genesys/2/chat/Support",
+    apikey: "",
+    cometD: {
+      enabled: false,
+    },
+    autoInvite: {
+      enabled: false,
+      timeToInviteSeconds: 5,
+      inviteTimeoutSeconds: 30,
+    },
+    chatButton: {
+      enabled: false,
+    },
+    uploadsEnabled: true,
+
+    async: {
+      enabled: false,
+
+      getSessionData: function () { /* noop — session restore disabled */ },
+      setSessionData: function () { return null; /* never restore */ },
+    },
+
+    minimizeOnMobileRestore: false,
+
+    markdown: false,
+
+    userData: {
+      ID: "3333", // Updated below
+      IMO: "7678", // Updated below
+      PhoneNumber: document.getElementById("webchatPhoneNumber").value ?? "",
+      Service: "Logisti",
+      Company: "Logisti",
+      lang: document.getElementById("webchatLang").value,
+      GCTI_LanguageCode: document.getElementById("webchatLang").value,
+    },
+
+    form: {
+      wrapper: "<table></table>",
+      inputs: [
+        {
+          id: "cx_webchat_form_firstname",
+          name: "firstname",
+          maxlength: "100",
+          placeholder: "@i18n:webchat.ChatFormPlaceholderFirstName",
+          label: "@i18n:webchat.ChatFormFirstName",
+          type: "hidden",
+          value: document.getElementById("webchatFirstName").value ?? "",
+        },
+
+        {
+          id: "cx_webchat_form_lastname",
+          name: "lastname",
+          maxlength: "100",
+          placeholder: "@i18n:webchat.ChatFormPlaceholderLastName",
+          label: "@i18n:webchat.ChatFormLastName",
+          type: "hidden",
+          value: document.getElementById("webchatLastName").value ?? "",
+        },
+
+        {
+          id: "cx_webchat_form_email",
+          name: "email",
+          maxlength: "100",
+          placeholder: "@i18n:webchat.ChatFormPlaceholderEmail",
+          label: "@i18n:webchat.ChatFormEmail",
+          type: "hidden",
+        },
+
+        {
+          id: "cx_webchat_form_subject",
+          name: "subject",
+          maxlength: "100",
+          placeholder: "@i18n:webchat.ChatFormPlaceholderSubject",
+          label: "@i18n:webchat.ChatFormSubject",
+          type: "hidden",
+          value: "Logisti Live Chat",
+        },
+      ],
+    },
+  },
+};
+
+if (!window._genesys.widgets.extensions)
+  window._genesys.widgets.extensions = {};
+
+window._genesys.widgets.extensions["WebChatExtension"] = function (
+  $,
+  CXBus,
+  Common
+) {
+  var oWebChatExtension = CXBus.registerPlugin("WebChatExtension");
+
+  oWebChatExtension.subscribe("WebChat.opened", function (e) {
+    if (document.getElementById("webchatEmail").value == "undefined") {
+      // Create Bootstrap modal dynamically
+      var modalHtml = `
+        <div class="modal fade" id="loginRequiredModal" tabindex="-1" aria-labelledby="loginRequiredModalLabel" aria-hidden="true" data-bs-backdrop="static">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header border-0">
+                <h5 class="modal-title w-100 text-center" id="loginRequiredModalLabel">
+                  ${language == "en" ? "You must login first" : "يجب تسجيل الدخول أولا لتتمكن من المحادثة"}
+                </h5>
+              </div>
+              <div class="modal-body text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">${language == "en" ? "Redirecting to login..." : "جاري التحويل لتسجيل الدخول..."}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Remove existing modal if any
+      var existingModal = document.getElementById("loginRequiredModal");
+      if (existingModal) {
+        existingModal.remove();
+      }
+
+      // Add modal to body
+      document.body.insertAdjacentHTML("beforeend", modalHtml);
+
+      // Show the modal using Bootstrap
+      var modalElement = document.getElementById("loginRequiredModal");
+      var modal = new bootstrap.Modal(modalElement);
+      modal.show();
+
+      setTimeout(function () {
+        location.href = "/dashboard";
+      }, 2500);
+    }
+
+    document
+      .getElementById("cx_webchat_form_firstname")
+      .setAttribute(
+        "value",
+        document.getElementById("webchatFirstName").value ?? ""
+      );
+    document
+      .getElementById("cx_webchat_form_lastname")
+      .setAttribute(
+        "value",
+        document.getElementById("webchatLastName").value ?? ""
+      );
+    document
+      .getElementById("cx_webchat_form_email")
+      .setAttribute(
+        "value",
+        document.getElementById("webchatEmail").value ?? ""
+      );
+
+    oWebChatExtension
+      .command("WebChatService.updateUserData", {
+        PhoneNumber: document.getElementById("webchatPhoneNumber").value ?? "",
+        Company: "Logisti",
+        ID: document.getElementById("webchatID").value ?? "",
+        IMO: document.getElementById("webchatMOI").value ?? "",
+        Service: "Logisti",
+        lang: document.getElementById("webchatLang").value ?? "",
+      })
+      .done(function (e) {})
+      .fail(function (e) {});
+  });
+
+  oWebChatExtension.republish("ready");
+
+  oWebChatExtension.ready();
+};
