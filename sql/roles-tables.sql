@@ -114,3 +114,17 @@ VALUES
  'محمد بن غرامه الاسمري',
  '966559879689',
  'ghaya.com21@gmail.com');
+
+-- ---------------------------------------------------------------------
+-- 3) أعمدة اختيارية على جدول بطاقة السائق `driver_cards`
+--    عشان بيانات المنشأة والترخيص في صفحة بطاقة السائق تبقى ديناميك كمان.
+--    لو مشغلتهاش: الصفحة هتشتغل عادي بالقيم الافتراضية القديمة.
+-- ---------------------------------------------------------------------
+ALTER TABLE `driver_cards`
+  ADD COLUMN `entity_name`         VARCHAR(255) NULL AFTER `expiry_date`,
+  ADD COLUMN `entity_id`           VARCHAR(30)  NULL AFTER `entity_name`,
+  ADD COLUMN `license_number`      VARCHAR(50)  NULL AFTER `entity_id`,
+  ADD COLUMN `license_type`        TEXT         NULL AFTER `license_number`,
+  ADD COLUMN `city`                VARCHAR(100) NULL AFTER `license_type`,
+  ADD COLUMN `license_issue_date`  VARCHAR(20)  NULL AFTER `city`,
+  ADD COLUMN `license_expiry_date` VARCHAR(20)  NULL AFTER `license_issue_date`;

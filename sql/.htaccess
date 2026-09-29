@@ -1,0 +1,13 @@
+# منع الوصول المباشر لملفات الإعدادات من المتصفح
+<IfModule mod_authz_core.c>
+  <FilesMatch "\.(php|ini|env|sql)$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+  <FilesMatch "\.(php|ini|env|sql)$">
+    Order allow,deny
+    Deny from all
+  </FilesMatch>
+</IfModule>
+Options -Indexes
