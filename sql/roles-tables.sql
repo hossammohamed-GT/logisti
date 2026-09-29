@@ -128,3 +128,50 @@ ALTER TABLE `driver_cards`
   ADD COLUMN `city`                VARCHAR(100) NULL AFTER `license_type`,
   ADD COLUMN `license_issue_date`  VARCHAR(20)  NULL AFTER `city`,
   ADD COLUMN `license_expiry_date` VARCHAR(20)  NULL AFTER `license_issue_date`;
+
+-- ---------------------------------------------------------------------
+-- 4) تحديث جدول `licenses` — ترتيب بيانات الترخيص الجديد + الحقول الإنجليزية
+--    شغّل الجزء ده مرة واحدة بعد ما الجدول يكون اتعمل.
+-- ---------------------------------------------------------------------
+ALTER TABLE `licenses`
+  ADD COLUMN `license_kind_en` VARCHAR(50)   NULL AFTER `license_kind`,
+  ADD COLUMN `issue_date`      VARCHAR(20)   NULL AFTER `license_kind_en`,
+  ADD COLUMN `entity_name_en`  VARCHAR(255)  NULL AFTER `entity_name`,
+  ADD COLUMN `region_en`       VARCHAR(100)  NULL AFTER `region`,
+  ADD COLUMN `city_en`         VARCHAR(100)  NULL AFTER `city`,
+  ADD COLUMN `address_en`      VARCHAR(255)  NULL AFTER `address`,
+  ADD COLUMN `activity_en`     VARCHAR(255)  NULL AFTER `activity`;
+
+-- الأعمدة القديمة تبقى اختيارية عشان الفورم الجديد ما يبعتش كل حاجة
+ALTER TABLE `licenses`
+  MODIFY `created_date`   VARCHAR(20)  NULL,
+  MODIFY `request_status` VARCHAR(50)  NULL,
+  MODIFY `cr_name`        VARCHAR(255) NULL,
+  MODIFY `cr_number`      VARCHAR(50)  NULL,
+  MODIFY `cr_status`      VARCHAR(50)  NULL,
+  MODIFY `cr_activity`    VARCHAR(255) NULL,
+  MODIFY `contact_name`   VARCHAR(150) NULL,
+  MODIFY `contact_mobile` VARCHAR(30)  NULL,
+  MODIFY `contact_email`  VARCHAR(150) NULL;
+
+-- مثال: تحديث بيانات الترخيص الحالي بالبيانات الجديدة
+UPDATE `licenses` SET
+  `license_number`  = '81/00000424',
+  `license_kind`    = 'رئيسي',
+  `license_kind_en` = 'Main',
+  `issue_date`      = '2026-08-12',
+  `expiry_date`     = '2027-08-12',
+  `request_status`  = 'نشط',
+  `entity_name`     = 'مؤسسة الإنجاز المتميزة للخدمات اللوجستية',
+  `entity_name_en`  = 'Al Enjaz Distinguished Logistics Services Establishment',
+  `entity_id`       = '7027992556',
+  `cr_number`       = '4030454952',
+  `region`          = 'مكة المكرمة',
+  `region_en`       = 'Makkah',
+  `city`            = 'محافظة جدة',
+  `city_en`         = 'Jeddah',
+  `address`         = 'مدائن الفهد، عبدالرحمن بن محمد القاسم',
+  `address_en`      = 'Madan Alfad, Abd Alhamn Mohamed',
+  `activity`        = 'نقل البضائع عبر الدراجات الآلية لأغراض تجارية',
+  `activity_en`     = 'Motorcycle Road Freight for Commercial Purpose'
+WHERE `token` = 'dcd63444-e888-454a-8c47-bbdbfdde04cd';

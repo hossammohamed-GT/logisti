@@ -242,22 +242,25 @@ $TYPES = [
     'driver' => [
         'table'  => 'driver_cards',
         'label'  => 'بطاقة سائق — Driver Card',
+        // key => [التسمية, نوع الحقل, القيمة الافتراضية, مطلوب؟, اسم المجموعة]
         'fields' => [
-            'first_name_ar'       => ['الاسم الأول', 'text', '', true],
-            'family_name_ar'      => ['اسم العائلة', 'text', '', true],
-            'driver_id_number'    => ['رقم الهوية', 'text', '', true],
-            'card_type_ar'        => ['نوع البطاقة (عربي)', 'text', 'نشاط النقل الخفيف للبضائع لأغراض تجارية (للغير - منشآت)', true],
-            'card_type_en'        => ['نوع البطاقة (إنجليزي)', 'text', 'Light Truck Driver', true],
-            'issue_date'          => ['تاريخ الإصدار', 'date', '', true],
-            'expiry_date'         => ['تاريخ الإنتهاء (لو فاضي: الإصدار + سنة ويومين)', 'date', '', false],
-            'card_number'         => ['رقم البطاقة (اتركه فاضي للتوليد التلقائي)', 'text', '', false],
-            'entity_name'         => ['اسم المنشأة', 'text', 'مؤسسة الإنجاز المتميزة للخدمات اللوجستية', false],
-            'entity_id'           => ['رقم هوية المنشأة', 'text', '7027992556', false],
-            'license_number'      => ['رقم الترخيص', 'text', '38/00014540', false],
-            'license_type'        => ['نوع الترخيص/النشاط', 'text', 'نشاط النقل الخفيف للبضائع لأغراض تجارية (للغير - منشآت)', false],
-            'city'                => ['المدينة', 'text', 'محافظة جدة', false],
-            'license_issue_date'  => ['تاريخ إصدار الترخيص (هجري)', 'text', '1446/09/08', false],
-            'license_expiry_date' => ['تاريخ إنتهاء الترخيص (هجري)', 'text', '1449/10/12', false],
+            'first_name_ar'       => ['الاسم الأول', 'text', '', true, 'بيانات السائق'],
+            'family_name_ar'      => ['اسم العائلة', 'text', '', true, 'بيانات السائق'],
+            'driver_id_number'    => ['رقم الهوية', 'text', '', true, 'بيانات السائق'],
+
+            'card_number'         => ['رقم البطاقة (فاضي = توليد تلقائي)', 'text', '', false, 'بيانات البطاقة'],
+            'card_type_ar'        => ['نوع البطاقة (عربي)', 'text', 'نشاط النقل الخفيف للبضائع لأغراض تجارية (للغير - منشآت)', true, 'بيانات البطاقة'],
+            'card_type_en'        => ['نوع البطاقة (إنجليزي)', 'text', 'Light Truck Driver', true, 'بيانات البطاقة'],
+            'issue_date'          => ['تاريخ الإصدار', 'date', '', true, 'بيانات البطاقة'],
+            'expiry_date'         => ['تاريخ الانتهاء (فاضي = الإصدار + سنة ويومين)', 'date', '', false, 'بيانات البطاقة'],
+
+            'entity_name'         => ['اسم المنشأة', 'text', 'مؤسسة الإنجاز المتميزة للخدمات اللوجستية', false, 'بيانات المنشأة والترخيص'],
+            'entity_id'           => ['رقم هوية المنشأة', 'text', '7027992556', false, 'بيانات المنشأة والترخيص'],
+            'license_number'      => ['رقم الترخيص', 'text', '38/00014540', false, 'بيانات المنشأة والترخيص'],
+            'license_type'        => ['نوع الترخيص/النشاط', 'text', 'نشاط النقل الخفيف للبضائع لأغراض تجارية (للغير - منشآت)', false, 'بيانات المنشأة والترخيص'],
+            'city'                => ['المدينة', 'text', 'محافظة جدة', false, 'بيانات المنشأة والترخيص'],
+            'license_issue_date'  => ['تاريخ إصدار الترخيص (هجري)', 'text', '1446/09/08', false, 'بيانات المنشأة والترخيص'],
+            'license_expiry_date' => ['تاريخ انتهاء الترخيص (هجري)', 'text', '1449/10/12', false, 'بيانات المنشأة والترخيص'],
         ],
     ],
 
@@ -265,20 +268,23 @@ $TYPES = [
         'table'  => 'operation_cards',
         'label'  => 'بطاقة تشغيل — Operation Card',
         'fields' => [
-            'entity_name'      => ['اسم المنشأة/الفرد', 'text', 'مؤسسة غايتكم للخدمات اللوجستية', true],
-            'license_number'   => ['رقم الترخيص', 'text', '81/00000424', true],
-            'license_type'     => ['نوع الترخيص/النشاط', 'text', 'نقل البضائع عبر الدراجات الآلية لأغراض تجارية', true],
-            'city'             => ['المدينة', 'text', 'محافظة جدة', true],
-            'card_number'      => ['رقم البطاقة (اتركه فاضي للتوليد التلقائي)', 'text', '', false],
-            'card_type'        => ['نوع بطاقة التشغيل', 'text', 'نقل البضائع عبر الدراجة الآلية لأغراض تجارية', true],
-            'issue_date'       => ['تاريخ الإصدار (هجري)', 'text', '1448/03/19', true],
-            'expiry_date'      => ['تاريخ الإنتهاء (هجري)', 'text', '1449/03/10', true],
-            'renewal_date'     => ['تاريخ التجديد (اختياري)', 'text', '', false],
-            'vehicle_model'    => ['نوع السيارة - الماركة و الطراز', 'text', 'دراجة نارية سويد', true],
-            'plate_number'     => ['رقم اللوحة', 'text', 'د ب 6285', true],
-            'manufacture_year' => ['سنة الصنع', 'text', '2025', true],
-            'vehicle_color'    => ['لون المركبة', 'text', 'رصاصي', true],
-            'serial_number'    => ['الرقم التسلسلي', 'text', '127771120', true],
+            'entity_name'      => ['اسم المنشأة/الفرد', 'text', 'مؤسسة غايتكم للخدمات اللوجستية', true, 'بيانات المنشأة/الفرد'],
+
+            'license_number'   => ['رقم الترخيص', 'text', '81/00000424', true, 'معلومات الترخيص الرئيسي'],
+            'license_type'     => ['نوع الترخيص/النشاط', 'text', 'نقل البضائع عبر الدراجات الآلية لأغراض تجارية', true, 'معلومات الترخيص الرئيسي'],
+            'city'             => ['المدينة', 'text', 'محافظة جدة', true, 'معلومات الترخيص الرئيسي'],
+
+            'card_number'      => ['رقم البطاقة (فاضي = توليد تلقائي)', 'text', '', false, 'بيانات بطاقة التشغيل'],
+            'card_type'        => ['نوع بطاقة التشغيل', 'text', 'نقل البضائع عبر الدراجة الآلية لأغراض تجارية', true, 'بيانات بطاقة التشغيل'],
+            'issue_date'       => ['تاريخ الإصدار (هجري)', 'text', '1448/03/19', true, 'بيانات بطاقة التشغيل'],
+            'expiry_date'      => ['تاريخ الانتهاء (هجري)', 'text', '1449/03/10', true, 'بيانات بطاقة التشغيل'],
+            'renewal_date'     => ['تاريخ التجديد (اختياري)', 'text', '', false, 'بيانات بطاقة التشغيل'],
+
+            'vehicle_model'    => ['نوع السيارة - الماركة و الطراز', 'text', 'دراجة نارية سويد', true, 'معلومات المركبة'],
+            'plate_number'     => ['رقم اللوحة', 'text', 'د ب 6285', true, 'معلومات المركبة'],
+            'manufacture_year' => ['سنة الصنع', 'text', '2025', true, 'معلومات المركبة'],
+            'vehicle_color'    => ['لون المركبة', 'text', 'رصاصي', true, 'معلومات المركبة'],
+            'serial_number'    => ['الرقم التسلسلي', 'text', '127771120', true, 'معلومات المركبة'],
         ],
     ],
 
@@ -286,25 +292,43 @@ $TYPES = [
         'table'  => 'licenses',
         'label'  => 'ترخيص — License',
         'fields' => [
-            'activity'       => ['نشاط الترخيص (العنوان الأخضر أعلى الصفحة)', 'text', 'نقل البضائع عبر الدراجات الآلية لأغراض تجارية', true],
-            'license_kind'   => ['النوع', 'text', 'رئيسي', true],
-            'license_number' => ['رقم الترخيص', 'text', '81/00000424', true],
-            'request_status' => ['حالة الطلب', 'text', 'نشط', true],
-            'created_date'   => ['تاريخ الإنشاء (هجري)', 'text', '1448-02-29', true],
-            'expiry_date'    => ['تاريخ الإنتهاء (هجري)', 'text', '1449-03-10', true],
-            'cr_name'        => ['اسم السجل التجاري', 'text', 'مؤسسة غايتكم للخدمات اللوجستية', true],
-            'cr_number'      => ['رقم السجل التجاري', 'text', '1010650025', true],
-            'cr_status'      => ['حالة السجل التجاري', 'text', 'نشط', true],
-            'cr_expiry_date' => ['تاريخ إنتهاء السجل (اختياري)', 'text', '', false],
-            'cr_activity'    => ['نشاط السجل التجاري', 'text', '492311 - النقل الخفيف', true],
-            'entity_name'    => ['اسم المنشأة', 'text', 'مؤسسة غايتكم للخدمات اللوجستية', true],
-            'entity_id'      => ['رقم هوية المنشأة', 'text', '7017775516', true],
-            'region'         => ['المنطقة', 'text', 'مكّة المكرّمة', true],
-            'city'           => ['المدينة', 'text', 'محافظة جدة', true],
-            'address'        => ['مقر مزاولة النشاط', 'text', '23466, عمرو ابن سنان, الاجواد', true],
-            'contact_name'   => ['مسؤول الاتصال', 'text', 'محمد بن غرامه الاسمري', true],
-            'contact_mobile' => ['رقم الجوال', 'text', '966559879689', true],
-            'contact_email'  => ['البريد الالكتروني', 'email', 'ghaya.com21@gmail.com', true],
+
+            /* ===== بيانات الترخيص ===== */
+            'license_number' => ['رقم الترخيص', 'text', '81/00000424', true, 'بيانات الترخيص'],
+            'license_kind'   => ['نوع الترخيص (عربي)', 'text', 'رئيسي', true, 'بيانات الترخيص'],
+            'license_kind_en' => ['نوع الترخيص (إنجليزي)', 'text', 'Main', false, 'بيانات الترخيص'],
+            'issue_date'     => ['تاريخ الإصدار', 'date', '2026-08-12', true, 'بيانات الترخيص'],
+            'expiry_date'    => ['تاريخ الانتهاء', 'text', '2027-08-12', true, 'بيانات الترخيص'],
+            'request_status' => ['حالة الطلب', 'text', 'نشط', false, 'بيانات الترخيص'],
+
+            /* ===== بيانات المنشأة ===== */
+            'entity_name'    => ['اسم المنشأة', 'text', 'مؤسسة الإنجاز المتميزة للخدمات اللوجستية', true, 'بيانات المنشأة'],
+            'entity_id'      => ['رقم هوية المنشأة', 'text', '7027992556', true, 'بيانات المنشأة'],
+            'cr_number'      => ['رقم السجل التجاري', 'text', '4030454952', true, 'بيانات المنشأة'],
+            'region'         => ['المنطقة', 'text', 'مكة المكرمة', true, 'بيانات المنشأة'],
+            'city'           => ['المدينة', 'text', 'محافظة جدة', true, 'بيانات المنشأة'],
+            'address'        => ['العنوان', 'text', 'مدائن الفهد، عبدالرحمن بن محمد القاسم', true, 'بيانات المنشأة'],
+
+            /* ===== English ===== */
+            'entity_name_en' => ['Organization Name', 'text', 'Al Enjaz Distinguished Logistics Services Establishment', false, 'English'],
+            'region_en'      => ['Region', 'text', 'Makkah', false, 'English'],
+            'city_en'        => ['City', 'text', 'Jeddah', false, 'English'],
+            'address_en'     => ['Address', 'text', 'Madan Alfad, Abd Alhamn Mohamed', false, 'English'],
+
+            /* ===== نوع النشاط ===== */
+            'activity'       => ['نوع النشاط (عربي) — العنوان الأخضر أعلى الصفحة', 'text', 'نقل البضائع عبر الدراجات الآلية لأغراض تجارية', true, 'نوع النشاط'],
+            'activity_en'    => ['Activity (English)', 'text', 'Motorcycle Road Freight for Commercial Purpose', false, 'نوع النشاط'],
+
+            /* ===== معلومات التواصل ===== */
+            'contact_name'   => ['مسؤول الاتصال', 'text', '', false, 'معلومات التواصل'],
+            'contact_mobile' => ['رقم الجوال', 'text', '', false, 'معلومات التواصل'],
+            'contact_email'  => ['البريد الالكتروني', 'email', '', false, 'معلومات التواصل'],
+
+            /* ===== بيانات السجل التجاري (اختيارية) ===== */
+            'cr_name'        => ['اسم السجل التجاري', 'text', 'مؤسسة الإنجاز المتميزة للخدمات اللوجستية', false, 'بيانات السجل التجاري (اختياري)'],
+            'cr_status'      => ['حالة السجل التجاري', 'text', 'نشط', false, 'بيانات السجل التجاري (اختياري)'],
+            'cr_expiry_date' => ['تاريخ انتهاء السجل', 'text', '', false, 'بيانات السجل التجاري (اختياري)'],
+            'cr_activity'    => ['نشاط السجل التجاري', 'text', '492311 - النقل الخفيف', false, 'بيانات السجل التجاري (اختياري)'],
         ],
     ],
 ];
@@ -328,7 +352,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_record']) && is_l
     $table  = $type['table'];
     $values = [];
 
-    foreach ($type['fields'] as $key => [$label, $inputType, $default, $required]) {
+    // أعمدة الجدول الفعلية — أي حقل مش موجود كعمود بيتجاهل تمامًا
+    $tableCols = table_columns($pdo, $table);
+
+    foreach ($type['fields'] as $key => $def) {
+        list($label, $inputType, $default, $required) = $def;
+        if ($tableCols && !in_array($key, $tableCols, true)) {
+            continue;
+        }
         $v = trim((string)($_POST[$key] ?? ''));
         if ($required && $v === '') {
             $_SESSION['flash_error'] = 'الحقل مطلوب: ' . $label;
@@ -353,7 +384,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_record']) && is_l
     $values['token'] = generate_token();
 
     // استبعاد أي حقل مش موجود كعمود في الجدول
-    $columns = table_columns($pdo, $table);
+    $columns = $tableCols;
     if (!$columns) {
         $_SESSION['flash_error'] = "الجدول {$table} غير موجود في قاعدة البيانات";
         header('Location: index.php?type=' . urlencode($activeType));
@@ -448,6 +479,11 @@ $csrf = csrf_token();
 
     h2 { margin: 0 0 16px; font-size: 20px; }
     h3 { margin: 24px 0 10px; font-size: 16px; color: var(--muted); }
+
+    .group-title {
+      margin: 22px 0 4px; padding-bottom: 8px; font-size: 15px;
+      color: var(--green); border-bottom: 1px solid var(--line);
+    }
 
     .topbar {
       display: flex; justify-content: space-between; align-items: center;
@@ -599,22 +635,43 @@ $csrf = csrf_token();
           <input type="hidden" name="csrf" value="<?= e($csrf) ?>">
           <input type="hidden" name="type" value="<?= e($activeType) ?>">
 
-          <div class="grid">
-            <?php
-            $cols = $dbDown ? [] : table_columns($pdo, $TYPES[$activeType]['table']);
-            foreach ($TYPES[$activeType]['fields'] as $key => [$label, $inputType, $default, $required]):
-                $exists = !$cols || in_array($key, $cols, true);
-                if (!$exists) { continue; }
-            ?>
-              <div>
-                <label for="f_<?= e($key) ?>">
-                  <?= e($label) ?><?= $required ? ' *' : '' ?>
-                </label>
-                <input id="f_<?= e($key) ?>" type="<?= e($inputType) ?>" name="<?= e($key) ?>"
-                  value="<?= e($default) ?>" <?= $required ? 'required' : '' ?>>
-              </div>
-            <?php endforeach; ?>
-          </div>
+          <?php
+          $cols       = $dbDown ? [] : table_columns($pdo, $TYPES[$activeType]['table']);
+          $lastGroup  = null;
+          $missingCols = [];
+
+          foreach ($TYPES[$activeType]['fields'] as $key => $def):
+              list($label, $inputType, $default, $required) = $def;
+              $group = isset($def[4]) ? $def[4] : '';
+
+              // لو العمود مش موجود في الجدول، بنعرض الحقل بس مش هيتحفظ
+              if ($cols && !in_array($key, $cols, true)) {
+                  $missingCols[] = $key;
+                  continue;
+              }
+
+              if ($group !== $lastGroup) {
+                  if ($lastGroup !== null) { echo "</div>"; }
+                  echo '<h3 class="group-title">' . e($group) . '</h3><div class="grid">';
+                  $lastGroup = $group;
+              }
+          ?>
+            <div>
+              <label for="f_<?= e($key) ?>">
+                <?= e($label) ?><?= $required ? ' *' : '' ?>
+              </label>
+              <input id="f_<?= e($key) ?>" type="<?= e($inputType) ?>" name="<?= e($key) ?>"
+                value="<?= e($default) ?>" <?= $required ? 'required' : '' ?>>
+            </div>
+          <?php endforeach; ?>
+          <?php if ($lastGroup !== null) { echo '</div>'; } ?>
+
+          <?php if ($missingCols): ?>
+            <p class="hint" style="color:#fbbf24;">
+              أعمدة ناقصة في الجدول (شغّل <code>sql/roles-tables.sql</code>):
+              <?= e(implode(', ', $missingCols)) ?>
+            </p>
+          <?php endif; ?>
 
           <br>
           <button name="add_record" value="1">حفظ وإنشاء الرابط</button>
