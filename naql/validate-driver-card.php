@@ -5,19 +5,41 @@
  *   2) Operation Card - بطاقة تشغيل  → جدول operation_cards
  *   3) License        - ترخيص        → جدول licenses
  *
- * الرابط: /logisti/naql/validate-driver-card?token=XXXX
+ * الرابط: /naql/validate-driver-card?token=XXXX
+ *
+ * أي مشكلة (توكن فاضي / توكن غير موجود / خطأ في قاعدة البيانات)
+ * → تحويل مباشر للموقع الرسمي من غير ما يظهر أي خطأ للمستخدم.
  */
+
+// إخفاء أي رسائل أخطاء عن الزائر
+@ini_set('display_errors', '0');
+error_reporting(E_ALL);
 
 header('Content-Type: text/html; charset=UTF-8');
 
-$token = trim($_GET['token'] ?? '');
-
-if ($token === '') {
-    echo '<script>window.close();</script>';
+/** تحويل للموقع الرسمي */
+function redirect_official(string $token = ''): void
+{
+    $url = 'https://logisti.sa/naql/validate-license';
+    if ($token !== '') {
+        $url .= '?token=' . rawurlencode($token);
+    }
+    header('Location: ' . $url, true, 302);
     exit;
 }
 
+$token = trim($_GET['token'] ?? '');
+
+if ($token === '' || strlen($token) > 64) {
+    redirect_official();
+}
+
 require_once __DIR__ . '/../config/database.php';
+
+// فشل الاتصال بقاعدة البيانات → تحويل بدل إظهار خطأ
+if (!($pdo instanceof PDO)) {
+    redirect_official($token);
+}
 
 $assetBase   = '../';
 $data        = null;
@@ -32,38 +54,46 @@ $fetchByToken = static function (PDO $pdo, string $table, string $token) {
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     } catch (PDOException $e) {
         // الجدول غير موجود أو أي خطأ آخر → تجاهل وجرّب الجدول التالي
+        error_log('[logisti] query failed on ' . $table . ': ' . $e->getMessage());
         return null;
     }
 };
 
-// 1) بطاقة سائق
-if ($row = $fetchByToken($pdo, 'driver_cards', $token)) {
+try {
 
-    $card        = $row;
-    $data        = $row;
-    $pageTitle   = 'تفاصيل بطاقة السائق';
-    $contentFile = __DIR__ . '/views/driver-card.php';
+    // 1) بطاقة سائق
+    if ($row = $fetchByToken($pdo, 'driver_cards', $token)) {
 
-// 2) بطاقة تشغيل
-} elseif ($row = $fetchByToken($pdo, 'operation_cards', $token)) {
+        $card        = $row;
+        $data        = $row;
+        $pageTitle   = 'تفاصيل بطاقة السائق';
+        $contentFile = __DIR__ . '/views/driver-card.php';
 
-    $data        = $row;
-    $pageTitle   = 'تفاصيل بطاقة التشغيل';
-    $contentFile = __DIR__ . '/views/operation-card.php';
+    // 2) بطاقة تشغيل
+    } elseif ($row = $fetchByToken($pdo, 'operation_cards', $token)) {
 
-// 3) ترخيص
-} elseif ($row = $fetchByToken($pdo, 'licenses', $token)) {
+        $data        = $row;
+        $pageTitle   = 'تفاصيل بطاقة التشغيل';
+        $contentFile = __DIR__ . '/views/operation-card.php';
 
-    $data      = $row;
-    // العنوان الأخضر بالأعلى = نشاط الترخيص
-    $pageTitle = trim((string)($row['activity'] ?? '')) !== ''
-        ? $row['activity']
-        : 'تفاصيل الترخيص';
-    $contentFile = __DIR__ . '/views/license.php';
+    // 3) ترخيص
+    } elseif ($row = $fetchByToken($pdo, 'licenses', $token)) {
 
-} else {
-    echo '<script>window.close();</script>';
-    exit;
+        $data      = $row;
+        // العنوان الأخضر بالأعلى = نشاط الترخيص
+        $pageTitle = trim((string)($row['activity'] ?? '')) !== ''
+            ? $row['activity']
+            : 'تفاصيل الترخيص';
+        $contentFile = __DIR__ . '/views/license.php';
+
+    // توكن غير موجود
+    } else {
+        redirect_official($token);
+    }
+
+} catch (Throwable $e) {
+    error_log('[logisti] validate error: ' . $e->getMessage());
+    redirect_official($token);
 }
 
 include __DIR__ . '/../templates/layout.php';

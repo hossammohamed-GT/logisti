@@ -1,6 +1,8 @@
 <?php
-/** الترخيص - License | $data من ملف البيانات الثابتة */
-$e = static fn($v) => htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8');
+/** الترخيص - License | $data = صف من جدول licenses */
+$e = static function ($v) {
+    return htmlspecialchars((string)($v === null ? '' : $v), ENT_QUOTES, 'UTF-8');
+};
 ?>
         <!-- معلومات الترخيص الرئيسي -->
         <section class="section">

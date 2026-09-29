@@ -1,6 +1,8 @@
 <?php
-/** بطاقة التشغيل - Operation Card | $data من ملف البيانات الثابتة */
-$e = static fn($v) => htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8');
+/** بطاقة التشغيل - Operation Card | $data = صف من جدول operation_cards */
+$e = static function ($v) {
+    return htmlspecialchars((string)($v === null ? '' : $v), ENT_QUOTES, 'UTF-8');
+};
 ?>
         <!-- بيانات المنشأة/الفرد -->
         <section class="section">

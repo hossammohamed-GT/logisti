@@ -35,6 +35,8 @@ header('Cache-Control: no-store, no-cache, must-revalidate');
 
 require_once __DIR__ . '/../config/database.php';
 
+$dbDown = !($pdo instanceof PDO);
+
 /* ============================== HELPERS ============================== */
 
 function e($v): string
@@ -314,7 +316,7 @@ if (!isset($TYPES[$activeType])) {
 
 /* ============================== ADD RECORD ============================== */
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_record']) && is_logged_in()) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_record']) && is_logged_in() && !$dbDown) {
 
     if (!csrf_check()) {
         $_SESSION['flash_error'] = 'انتهت صلاحية الصفحة، حاول مرة أخرى';
@@ -391,7 +393,7 @@ unset($_SESSION['flash_result'], $_SESSION['flash_error']);
 /* ============================== LISTS ============================== */
 
 $recent = [];
-if (is_logged_in()) {
+if (is_logged_in() && !$dbDown) {
     foreach ($TYPES as $k => $t) {
         try {
             $stmt = $pdo->query("SELECT * FROM `{$t['table']}` ORDER BY id DESC LIMIT 10");
@@ -532,6 +534,13 @@ $csrf = csrf_token();
         </form>
       </div>
 
+      <?php if ($dbDown): ?>
+        <div class="error">
+          تعذّر الاتصال بقاعدة البيانات — راجع بيانات الاتصال في <code>config/database.php</code>
+          <?php if (!empty($dbError)): ?><br><span class="hint"><?= e($dbError) ?></span><?php endif; ?>
+        </div>
+      <?php endif; ?>
+
       <?php if ($flashError): ?>
         <div class="error"><?= e($flashError) ?></div>
       <?php endif; ?>
@@ -592,7 +601,7 @@ $csrf = csrf_token();
 
           <div class="grid">
             <?php
-            $cols = table_columns($pdo, $TYPES[$activeType]['table']);
+            $cols = $dbDown ? [] : table_columns($pdo, $TYPES[$activeType]['table']);
             foreach ($TYPES[$activeType]['fields'] as $key => [$label, $inputType, $default, $required]):
                 $exists = !$cols || in_array($key, $cols, true);
                 if (!$exists) { continue; }

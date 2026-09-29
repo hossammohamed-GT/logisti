@@ -8,7 +8,11 @@
  */
 if (!isset($assetBase))   { $assetBase = ''; }
 if (!isset($pageTitle))   { $pageTitle = 'logisti'; }
-if (!isset($contentFile) || !is_file($contentFile)) { http_response_code(404); exit; }
+if (!isset($contentFile) || !is_file($contentFile)) {
+    // مفيش محتوى للعرض → تحويل للموقع الرسمي بدل ما يظهر خطأ
+    header('Location: https://logisti.sa/naql/validate-license', true, 302);
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">

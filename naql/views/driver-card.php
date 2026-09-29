@@ -5,7 +5,9 @@
  * الحقول الخاصة بالمنشأة والترخيص اختيارية: لو الأعمدة مش موجودة أو فاضية
  * بيتم استخدام القيم الافتراضية (نفس القيم القديمة) بدل ما الصفحة تفضى.
  */
-$e = static fn($v) => htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8');
+$e = static function ($v) {
+    return htmlspecialchars((string)($v === null ? '' : $v), ENT_QUOTES, 'UTF-8');
+};
 
 $val = static function (string $key, string $default = '') use ($card) {
     $v = trim((string)($card[$key] ?? ''));
